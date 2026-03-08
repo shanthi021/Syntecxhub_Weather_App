@@ -1,18 +1,32 @@
+import { useState } from "react";
+import { Settings } from "lucide-react";
 import { useWeather } from "@/hooks/useWeather";
 import { SearchBar } from "@/components/SearchBar";
 import { CurrentWeatherCard } from "@/components/CurrentWeatherCard";
 import { ForecastCard } from "@/components/ForecastCard";
+import { SettingsPanel, useTheme } from "@/components/SettingsPanel";
 import { motion, AnimatePresence } from "framer-motion";
 import { CloudOff } from "lucide-react";
 
 const Index = () => {
   const { current, daily, location, loading, error, fetchWeather } = useWeather();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  useTheme(); // ensure theme is applied on mount
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-10 gap-6 max-w-lg mx-auto">
-      <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">
-        Weather
-      </h1>
+      <div className="w-full flex items-center justify-between">
+        <div className="w-10" />
+        <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">
+          Weather
+        </h1>
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="w-10 h-10 flex items-center justify-center rounded-2xl bg-secondary/50 text-muted-foreground hover:bg-secondary transition-colors"
+        >
+          <Settings className="w-5 h-5" />
+        </button>
+      </div>
 
       <SearchBar onSearch={fetchWeather} loading={loading} />
 
@@ -41,6 +55,8 @@ const Index = () => {
       {loading && (
         <div className="text-muted-foreground text-sm animate-pulse">Loading weather data...</div>
       )}
+
+      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 };
